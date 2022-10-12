@@ -64,12 +64,41 @@ class Tree # rubocop:disable Style/Documentation
     end
   end
 
+  def find(value, node = @root)
+    return node if node.data == value
+
+    return nil if node.data.nil?
+
+    value < node.data ? find(value, node.left) : find(value, node.right)
+  end
+
+  # def level_order(node = @root)
+  #   queue = [node]
+  #   result = []
+  #   return result if node.nil?
+
+  #   until queue.empty?
+  #     current_node = queue.shift
+  #     result.push(block_given? ? yield(current_node) : current_node.data)
+  #     queue << current_node.left unless current_node.left.nil?
+  #     queue << current_node.right unless current_node.right.nil?
+  #   end
+  #   result
+  # end
+
+  def level_order(node = @root, result = [], level = 0)
+    return result if node.nil?
+
+    result << [] if result.length == level
+    result[level].push(block_given? ? yield(node.data) : node.data)
+    level_order(node.left, result, level + 1)
+    level_order(node.right, result, level + 1)
+  end
 
 end
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 t = Tree.new(array)
-p t
-# t.delete(67)
 p t.pretty_print
+p t.level_order
 
 
