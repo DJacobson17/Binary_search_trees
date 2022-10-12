@@ -36,11 +36,40 @@ class Tree # rubocop:disable Style/Documentation
       node.left ? insert(value, node.left) : node.left = Node.new(value)
     end
   end
+
+  def minValue(root)
+    minv = root.data
+    until root.left.nil?
+      minv = root.left.data
+      root = root.left
+    end
+    minv
+  end
+
+  def delete(value, node = @root)
+    return node if node.nil?
+
+    if value < node.data
+      node.left = delete(value, node.left)
+    elsif value > node.data
+      node.right = delete(value, node.right)
+    else
+      return node.right if node.left.nil?
+
+      return node.left if node.right.nil?
+
+      node.data = minValue(node.right)
+      node.right = delete(node.data, node.right)
+      node
+    end
+  end
+
+
 end
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 t = Tree.new(array)
 p t
-t.insert(2)
+# t.delete(67)
 p t.pretty_print
 
 
