@@ -4,8 +4,10 @@ class Node # rubocop:disable Style/Documentation
   include Comparable
   attr_accessor :data, :left, :right
 
-  def initialize(data, left = nil, right = nil)
+  def initialize(data)
     @data = data
+    @right = nil
+    @left = nil
   end
 
   def <=>(other)
@@ -13,6 +15,3 @@ class Node # rubocop:disable Style/Documentation
   end
 end
 
-a1 = Node.new(4)
-a2 = Node.new(6)
-p a1 > a2

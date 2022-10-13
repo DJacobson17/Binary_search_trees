@@ -95,10 +95,70 @@ class Tree # rubocop:disable Style/Documentation
     level_order(node.right, result, level + 1)
   end
 
+  def inorder(node = @root, result = [])
+    return result if node.nil?
+
+    inorder(node.left, result)
+    result.push(block_given? ? yield(node.data) : node.data)
+    inorder(node.right, result)
+  end
+
+  def preorder(node = @root, result = [])
+    if node
+      result.push(block_given? ? yield(node.data) : node.data)
+      preorder(node.left, result) if node.left
+      preorder(node.right, result) if node.right
+    end
+    result
+  end
+
+  def postorder(node = @root, result = [])
+    if node
+      postorder(node.left, result) if node.left
+      postorder(node.right, result) if node.right
+      result.push(block_given? ? yield(node.data) : node.data)
+    end
+    result
+  end
+
+  def height(node = @root, to_leaf = -1)
+    return to_leaf if node.nil?
+
+    to_leaf += 1
+    [height(node.left, to_leaf), height(node.right, to_leaf)].max
+
+  end
+
+  def depth(node, parent_node = @root, edges = 0)
+    return edges if node == parent_node
+
+    edges += 1
+    if node < parent_node
+      depth(node, parent_node.left, edges)
+    else
+      depth(node, parent_node.right, edges)
+    end
+  end
+
+  def balanced?(node = @root)
+    return true if node.nil?
+
+    left_height = height(node.left)
+    right_height = height(node.right)
+    return true if (left_height - right_height).abs <= 1 && balanced?(node.left) && balanced?(node.right)
+  end
+
+  def rebalance
+    array = inorder
+    @root = build_tree(array)
+  end
+
+
 end
 array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 t = Tree.new(array)
 p t.pretty_print
-p t.level_order
+p t.balanced?
+
 
 
