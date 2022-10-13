@@ -146,19 +146,12 @@ class Tree # rubocop:disable Style/Documentation
     left_height = height(node.left)
     right_height = height(node.right)
     return true if (left_height - right_height).abs <= 1 && balanced?(node.left) && balanced?(node.right)
+
+    false
   end
 
   def rebalance
     array = inorder
     @root = build_tree(array)
   end
-
-
 end
-array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-t = Tree.new(array)
-p t.pretty_print
-p t.balanced?
-
-
-
